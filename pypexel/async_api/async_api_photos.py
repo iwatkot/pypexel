@@ -62,7 +62,7 @@ class AsyncPhotosApi(AsyncBaseApi):
 
         results = await self._request_with_pagination(
             url=url,
-            params=params,
+            params=params,  # type: ignore
             limit=limit,
             key=ApiFields.PHOTOS,
             start_page=start_page,

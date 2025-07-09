@@ -63,7 +63,7 @@ class AsyncVideosApi(AsyncBaseApi):
 
         results = await self._request_with_pagination(
             url=url,
-            params=params,
+            params=params,  # type: ignore
             limit=limit,
             key=ApiFields.VIDEOS,
             start_page=start_page,
@@ -128,7 +128,7 @@ class AsyncVideosApi(AsyncBaseApi):
 
         results = await self._request_with_pagination(
             url=url,
-            params=params,
+            params=params,  # type: ignore
             limit=limit,
             key=ApiFields.VIDEOS,
             start_page=start_page,

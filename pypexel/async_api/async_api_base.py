@@ -94,20 +94,18 @@ class AsyncBaseApi:
     async def _request_with_pagination(
         self,
         url: str,
-        params: dict[str, str],
+        params: dict[str, str | int | None],
         limit: int,
         key: str,
-        method: str = "GET",
         start_page: int = 1,
-    ) -> list:
+    ) -> list[Any]:
         """Makes an asynchronous HTTP request with pagination.
 
         Arguments:
             url (str): The URL to request.
-            params (dict[str, str]): The query parameters for the request.
+            params (dict[str, str | int | None]): The query parameters for the request.
             limit (int): The maximum number of results to return.
             key (str): The key in the response JSON that contains the results.
-            method (str): The HTTP method to use ('GET' or 'POST').
             start_page (int): The page number to start from (default is 1).
 
         Returns:
@@ -124,9 +122,9 @@ class AsyncBaseApi:
             key,
         )
 
-        results = []
+        results: list[Any] = []
         while len(results) < limit:
-            response = await self._request_with_retry(url, params, method)
+            response = await self._request_with_retry(url, params)
             data = response.json()
 
             if key not in data:
@@ -134,7 +132,7 @@ class AsyncBaseApi:
 
             results.extend(data[key])
 
-            params["page"] += 1
+            params["page"] += 1  # type: ignore
 
             if data.get(ApiFields.TOTAL_RESULTS, 0) < limit:
                 self.logger.debug(
@@ -147,37 +145,28 @@ class AsyncBaseApi:
         return results[:limit]
 
     async def _request_with_retry(
-        self, url: str, params: dict[str, str], method: str = "GET"
+        self, url: str, params: dict[str, str | int | None]
     ) -> httpx.Response:
         """Makes an asynchronous HTTP request with retry logic.
 
         Arguments:
             url (str): The URL to request.
             params (dict[str, str]): The query parameters for the request.
-            method (str): The HTTP method to use ('GET' or 'POST').
 
         Returns:
             httpx.Response: The response from the HTTP request.
 
         Raises:
-            ValueError: If the method is not 'GET' or 'POST'.
             httpx.RequestError: If there is a network-related error.
             httpx.TimeoutException: If the request times out.
             httpx.HTTPStatusError: If the response status code indicates an error.
             ConnectionError: If the maximum number of retries is exceeded.
         """
-        self.logger.debug("Making %s request to %s...", method, url)
+        self.logger.debug("Making request to %s...", url)
         for retry in range(1, self.max_retries + 1):
             try:
                 async with httpx.AsyncClient() as client:
-                    if method == "GET":
-                        func = client.get
-                    elif method == "POST":
-                        func = client.post
-                    else:
-                        raise ValueError("Unsupported HTTP method. Use 'GET' or 'POST'.")
-
-                    response = await func(
+                    response = await client.get(
                         url,
                         headers={"Authorization": self._token},
                         params=params,

@@ -122,7 +122,7 @@ class AsyncCollectionsApi(AsyncBaseApi):
 
         results = await self._request_with_pagination(
             url=url,
-            params=params,
+            params=params,  # type: ignore
             limit=100,
             key=ApiFields.MEDIA,
             start_page=start_page,
@@ -131,7 +131,7 @@ class AsyncCollectionsApi(AsyncBaseApi):
         if not results:
             return []
 
-        parsed_results = []
+        parsed_results: list[Photo | Video] = []
         for item in results:
             if item.get("type") == ApiFields.TYPE_PHOTO:
                 parsed_results.append(Photo(**item))

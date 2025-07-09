@@ -1,14 +1,12 @@
 """This module provides the asynchronous API client for videos."""
 
-from pypexel.async_api.async_api_base import AsyncBaseApi, ApiFields
-from pypexel.models.models_video import Video
-
 from typing import Literal
+
+from pypexel.async_api.async_api_base import ApiFields, AsyncBaseApi
+from pypexel.models.models_video import Video
 
 
 class AsyncVideosApi(AsyncBaseApi):
-    key = "videos"
-
     async def search(
         self,
         query: str,

@@ -1,13 +1,16 @@
 """This module provides the base class for asynchronous API clients."""
 
-from typing import Any
-import httpx
 import asyncio
+from typing import Any
+
+import httpx
 
 
 class ApiFields:
     PHOTOS = "photos"
     VIDEOS = "videos"
+    COLLECTIONS = "collections"
+    MEDIA = "media"
 
     QUERY = "query"
     ORIENTATION = "orientation"
@@ -19,6 +22,13 @@ class ApiFields:
     MIN_HEIGHT = "min_height"
     MIN_DURATION = "min_duration"
     MAX_DURATION = "max_duration"
+
+    TOTAL_RESULTS = "total_results"
+
+    TYPE = "type"
+    TYPE_PHOTO = "Photo"
+    TYPE_VIDEO = "Video"
+    SORT = "sort"
 
 
 class AsyncBaseApi:
@@ -33,7 +43,7 @@ class AsyncBaseApi:
     ):
         self._token = token
         self._max_retries = max_retries
-        self.logger = logger if logger else Logger(__name__)
+        self.logger = logger if logger is not None else Logger(__name__)
 
         self._host = "https://api.pexels.com"
         self._timeout = timeout
@@ -106,6 +116,14 @@ class AsyncBaseApi:
         params["per_page"] = 80  # Using maximum allowed by Pexels API.
         params["page"] = start_page
 
+        self.logger.debug(
+            "Starting pagination with URL: %s, params: %s, limit: %d, key: %s",
+            url,
+            params,
+            limit,
+            key,
+        )
+
         results = []
         while len(results) < limit:
             response = await self._request_with_retry(url, params, method)
@@ -117,6 +135,14 @@ class AsyncBaseApi:
             results.extend(data[key])
 
             params["page"] += 1
+
+            if data.get(ApiFields.TOTAL_RESULTS, 0) < limit:
+                self.logger.debug(
+                    "Total results (%d) less than limit (%d), stopping pagination.",
+                    data.get(ApiFields.TOTAL_RESULTS, 0),
+                    limit,
+                )
+                break
 
         return results[:limit]
 
@@ -149,9 +175,7 @@ class AsyncBaseApi:
                     elif method == "POST":
                         func = client.post
                     else:
-                        raise ValueError(
-                            "Unsupported HTTP method. Use 'GET' or 'POST'."
-                        )
+                        raise ValueError("Unsupported HTTP method. Use 'GET' or 'POST'.")
 
                     response = await func(
                         url,
@@ -175,9 +199,7 @@ class AsyncBaseApi:
             except httpx.HTTPStatusError as e:
                 raise e
 
-        raise ConnectionError(
-            f"Max retries exceeded with no successful response to {url}"
-        )
+        raise ConnectionError(f"Max retries exceeded with no successful response to {url}")
 
 
 class Logger:

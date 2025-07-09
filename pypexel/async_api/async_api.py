@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from pypexel.async_api.async_api_collections import AsyncCollectionsApi
 from pypexel.async_api.async_api_photos import AsyncPhotosApi
 from pypexel.async_api.async_api_videos import AsyncVideosApi
 
@@ -18,5 +19,8 @@ class AsyncApi:
             token=token, max_retries=max_retries, logger=logger, timeout=timeout
         )
         self.videos = AsyncVideosApi(
+            token=token, max_retries=max_retries, logger=logger, timeout=timeout
+        )
+        self.collections = AsyncCollectionsApi(
             token=token, max_retries=max_retries, logger=logger, timeout=timeout
         )

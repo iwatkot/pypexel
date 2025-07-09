@@ -1,12 +1,10 @@
-from pypexel.async_api.async_api_base import AsyncBaseApi, ApiFields
-from pypexel.models.models_photo import Photo
-
 from typing import Literal
+
+from pypexel.async_api.async_api_base import ApiFields, AsyncBaseApi
+from pypexel.models.models_photo import Photo
 
 
 class AsyncPhotosApi(AsyncBaseApi):
-    key = "photos"
-
     async def search(
         self,
         query: str,

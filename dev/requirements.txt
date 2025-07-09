@@ -3,3 +3,7 @@ pydantic
 mypy
 pylint
 pydoc-markdown
+pytest
+pytest-cov
+pytest-asyncio
+pytest-httpx

@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mypy pylint pydantic httpx
+          pip install mypy pylint pydantic httpx pytest-cov pytest-asyncio pytest-httpx pytest
 
       - name: Run mypy to generate cache
         run: mypy pypexel || true

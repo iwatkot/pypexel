@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pypexel"
+version = "0.0.1"
+description = "Async Object-oriented Python SDK for the Pexels API."
+authors = [{name = "iwatkot", email = "iwatkot@gmail.com"}]
+license = {text = "MIT License"}
+readme = "README.md"
+keywords = ["pexels", "sdk", "async", "images", "videos"]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "httpx>=0.20.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/iwatkot/pypexel"
+Repository = "https://github.com/iwatkot/pypexel"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pypexel*"]
+exclude = ["dev*"]

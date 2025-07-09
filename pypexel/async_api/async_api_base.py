@@ -7,6 +7,7 @@ import asyncio
 
 class ApiFields:
     PHOTOS = "photos"
+    VIDEOS = "videos"
 
     QUERY = "query"
     ORIENTATION = "orientation"
@@ -14,16 +15,28 @@ class ApiFields:
     COLOR = "color"
     LOCALE = "locale"
 
+    MIN_WIDTH = "min_width"
+    MIN_HEIGHT = "min_height"
+    MIN_DURATION = "min_duration"
+    MAX_DURATION = "max_duration"
+
 
 class AsyncBaseApi:
     """Base class for asynchronous API clients."""
 
-    def __init__(self, token: str, max_retries: int = 3, logger: Any | None = None):
+    def __init__(
+        self,
+        token: str,
+        max_retries: int = 3,
+        logger: Any | None = None,
+        timeout: int = 30,
+    ):
         self._token = token
         self._max_retries = max_retries
         self.logger = logger if logger else Logger(__name__)
 
         self._host = "https://api.pexels.com"
+        self._timeout = timeout
 
     @property
     def token(self) -> str:
@@ -141,7 +154,10 @@ class AsyncBaseApi:
                         )
 
                     response = await func(
-                        url, headers={"Authorization": self._token}, params=params
+                        url,
+                        headers={"Authorization": self._token},
+                        params=params,
+                        timeout=self._timeout,
                     )
                     response.raise_for_status()
 

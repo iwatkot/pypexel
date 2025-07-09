@@ -5,6 +5,16 @@ import httpx
 import asyncio
 
 
+class ApiFields:
+    PHOTOS = "photos"
+
+    QUERY = "query"
+    ORIENTATION = "orientation"
+    SIZE = "size"
+    COLOR = "color"
+    LOCALE = "locale"
+
+
 class AsyncBaseApi:
     """Base class for asynchronous API clients."""
 

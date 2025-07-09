@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 class Collection(BaseModel):
+    """Model representing a collection of media items."""
+
     id: str
     title: str
     description: str | None

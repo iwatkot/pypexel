@@ -88,4 +88,4 @@ class AsyncApi:
         if not token:
             raise ValueError("PEXELS_API_KEY environment variable is not set.")
 
-        return cls(token=token, max_retries=max_retries, logger=logger)
+        return cls(token=token, max_retries=max_retries, logger=logger, timeout=timeout)

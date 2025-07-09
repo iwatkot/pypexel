@@ -7,6 +7,8 @@ import httpx
 
 
 class ApiFields:
+    """Constants for API fields used in requests and responses."""
+
     PHOTOS = "photos"
     VIDEOS = "videos"
     COLLECTIONS = "collections"
@@ -200,13 +202,13 @@ class Logger:
         pass
 
     def debug(self, *args, **kwargs) -> None:
-        pass
+        """Dummy debug method that does nothing."""
 
     def info(self, *args, **kwargs) -> None:
-        pass
+        """Dummy info method that does nothing."""
 
     def warning(self, *args, **kwargs) -> None:
-        pass
+        """Dummy warning method that does nothing."""
 
     def error(self, *args, **kwargs) -> None:
-        pass
+        """Dummy error method that does nothing."""

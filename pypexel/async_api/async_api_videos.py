@@ -7,6 +7,8 @@ from pypexel.models.models_video import Video
 
 
 class AsyncVideosApi(AsyncBaseApi):
+    """Asynchronous API client for videos."""
+
     async def search(
         self,
         query: str,

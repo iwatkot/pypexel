@@ -1,3 +1,5 @@
+"""This module provides an asynchronous API client for searching and retrieving photos from the Pexels API."""
+
 from typing import Literal
 
 from pypexel.async_api.async_api_base import ApiFields, AsyncBaseApi
@@ -5,6 +7,8 @@ from pypexel.models.models_photo import Photo
 
 
 class AsyncPhotosApi(AsyncBaseApi):
+    """Asynchronous API client for photos."""
+
     async def search(
         self,
         query: str,

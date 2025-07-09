@@ -9,6 +9,8 @@ from pypexel.models.models_video import Video
 
 
 class AsyncCollectionsApi(AsyncBaseApi):
+    """Asynchronous API client for collections."""
+
     async def featured(self, limit: int, start_page: int = 1) -> list[Collection]:
         """Get featured collections.
 
@@ -82,7 +84,7 @@ class AsyncCollectionsApi(AsyncBaseApi):
     async def media(
         self,
         collection_id: str,
-        type: Literal["photos", "videos"] | None = None,
+        media_type: Literal["photos", "videos"] | None = None,
         sort: Literal["asc", "desc"] | None = None,
         start_page: int = 1,
     ) -> list[Photo | Video]:
@@ -90,7 +92,7 @@ class AsyncCollectionsApi(AsyncBaseApi):
 
         Arguments:
             collection_id (str): The ID of the collection to retrieve media from.
-            type (Literal["photos", "videos"] | None): The type of media to filter by (default is None, which returns both).
+            media_type (Literal["photos", "videos"] | None): The type of media to filter by (default is None, which returns both).
             sort (Literal["asc", "desc"] | None): The sort order for the media items (default is None).
             start_page (int): The page number to start from (default is 1).
 
@@ -116,7 +118,7 @@ class AsyncCollectionsApi(AsyncBaseApi):
         url = self._url(f"v1/collections/{collection_id}")
 
         params = {
-            ApiFields.TYPE: type,
+            ApiFields.TYPE: media_type,
             ApiFields.SORT: sort,
         }
 

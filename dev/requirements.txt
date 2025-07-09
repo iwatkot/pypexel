@@ -2,3 +2,4 @@ httpx
 pydantic
 mypy
 pylint
+pydoc-markdown

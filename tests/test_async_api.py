@@ -44,3 +44,41 @@ async def test_photo_search(httpx_mock: HTTPXMock):
     assert len(results) == len(response_example["photos"])
     result = results[0]
     assert isinstance(result, pex.Photo)
+
+
+@pytest.mark.asyncio
+async def test_photo_curated(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "photos_curated.json")))
+
+    # Mock the curated endpoint - it uses empty params with pagination
+    httpx_mock.add_response(
+        url=f"{HOST}/v1/curated?per_page=80&page=1",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.photos._host = HOST  # Set host on the photos API object
+    results = await api.photos.curated(limit=5)
+    assert len(results) == len(response_example["photos"])
+    result = results[0]
+    assert isinstance(result, pex.Photo)
+
+
+@pytest.mark.asyncio
+async def test_photo_get(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "photo.json")))
+
+    # Mock the get photo endpoint - no pagination, just photo ID in URL
+    photo_id = 12345678
+    httpx_mock.add_response(
+        url=f"{HOST}/v1/photos/{photo_id}",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.photos._host = HOST  # Set host on the photos API object
+    result = await api.photos.get(photo_id)
+    assert isinstance(result, pex.Photo)
+    assert result.id == response_example["id"]

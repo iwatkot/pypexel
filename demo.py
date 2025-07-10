@@ -40,12 +40,10 @@ async def main():
     for video in videos:
         # 7️⃣ Use the .video_files property to get the download links for different video qualities.
         download_link = video.video_files[0].link
-        print(
-            f"Video ID: {video.id}, Photographer: {video.photographer}, Download Link: {download_link}"
-        )
+        print(f"Video ID: {video.id}, Download Link: {download_link}")
 
     # 8️⃣ Work with collections.
-    collections: list[pex.Collection] = await api.collections.search("nature", limit=5)
+    collections: list[pex.Collection] = await api.collections.featured(limit=2)
     print(f"Found {len(collections)} collections.")
 
     collection = collections[0]

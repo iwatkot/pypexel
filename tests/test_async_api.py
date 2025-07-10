@@ -139,3 +139,62 @@ async def test_video_get(httpx_mock: HTTPXMock):
     result = await api.videos.get(video_id)
     assert isinstance(result, pex.Video)
     assert result.id == response_example["id"]
+
+
+@pytest.mark.asyncio
+async def test_collection_featured(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "collections_featured.json")))
+
+    # Mock the featured collections endpoint - it uses empty params with pagination
+    httpx_mock.add_response(
+        url=f"{HOST}/v1/collections/featured?per_page=80&page=1",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.collections._host = HOST  # Set host on the collections API object
+    results = await api.collections.featured(limit=1)
+    assert len(results) == len(response_example["collections"])
+    result = results[0]
+    assert isinstance(result, pex.Collection)
+
+
+@pytest.mark.asyncio
+async def test_collection_my(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "collections_my.json")))
+
+    # Mock the my collections endpoint - it uses empty params with pagination
+    httpx_mock.add_response(
+        url=f"{HOST}/v1/collections?per_page=80&page=1",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.collections._host = HOST  # Set host on the collections API object
+    results = await api.collections.my(limit=1)
+    assert len(results) == len(response_example["collections"])
+    result = results[0]
+    assert isinstance(result, pex.Collection)
+
+
+@pytest.mark.asyncio
+async def test_collection_media(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "collection_media.json")))
+
+    # Mock the collection media endpoint - uses collection ID in URL with optional params
+    collection_id = "abc123"
+    httpx_mock.add_response(
+        url=f"{HOST}/v1/collections/{collection_id}?type=&sort=&per_page=80&page=1",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.collections._host = HOST  # Set host on the collections API object
+    results = await api.collections.media(collection_id)
+    assert len(results) == len(response_example["media"])
+    # The media endpoint can return both photos and videos, so check the first item
+    result = results[0]
+    assert isinstance(result, (pex.Photo, pex.Video))

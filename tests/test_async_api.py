@@ -82,3 +82,60 @@ async def test_photo_get(httpx_mock: HTTPXMock):
     result = await api.photos.get(photo_id)
     assert isinstance(result, pex.Photo)
     assert result.id == response_example["id"]
+
+
+@pytest.mark.asyncio
+async def test_video_search(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "videos_search.json")))
+
+    # Mock the video search endpoint - similar to photos but different endpoint
+    httpx_mock.add_response(
+        url=f"{HOST}/videos/search?query=nature&orientation=&size=&locale=&per_page=80&page=1",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.videos._host = HOST  # Set host on the videos API object
+    results = await api.videos.search("nature", limit=1)
+    assert len(results) == len(response_example["videos"])
+    result = results[0]
+    assert isinstance(result, pex.Video)
+
+
+@pytest.mark.asyncio
+async def test_video_popular(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "videos_popular.json")))
+
+    # Mock the popular videos endpoint - it uses optional dimension/duration params
+    httpx_mock.add_response(
+        url=f"{HOST}/videos/popular?min_width=&min_height=&min_duration=&max_duration=&per_page=80&page=1",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.videos._host = HOST  # Set host on the videos API object
+    results = await api.videos.popular(limit=1)
+    assert len(results) == len(response_example["videos"])
+    result = results[0]
+    assert isinstance(result, pex.Video)
+
+
+@pytest.mark.asyncio
+async def test_video_get(httpx_mock: HTTPXMock):
+    api = pex.AsyncApi("your-api-key")
+    response_example = json.load(open(os.path.join(RESPONSES_DIR, "video.json")))
+
+    # Mock the get video endpoint - no pagination, just video ID in URL
+    video_id = 7438482
+    httpx_mock.add_response(
+        url=f"{HOST}/videos/videos/{video_id}",
+        json=response_example,
+        status_code=200,
+    )
+
+    api.videos._host = HOST  # Set host on the videos API object
+    result = await api.videos.get(video_id)
+    assert isinstance(result, pex.Video)
+    assert result.id == response_example["id"]

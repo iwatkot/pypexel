@@ -33,3 +33,11 @@ jobs:
 
       - name: Run pylint
         run: pylint pypexel
+
+      - name: Run pytest with coverage
+        run: pytest --cov=pypexel --cov-branch --cov-report xml
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          slug: iwatkot/pypexel

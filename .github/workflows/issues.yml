@@ -30,8 +30,7 @@ jobs:
             - Steps to reproduce the issue<br>
             - Python version<br>
             - OS<br>
-            - py3xui version<br>
-            - 3x-UI version<br>
+            - pypexel version<br>
             - Code snippet or a minimal example to reproduce the issue (if applicable)<br>
             - JSON representation of the request to the API (if applicable)<br>
 

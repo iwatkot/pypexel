@@ -1,5 +1,5 @@
 <div align="center" markdown>
-<img src="">
+<img src="https://github.com/iwatkot/pypexel/releases/download/0.0.1/poster.png">
 
 Async Object-oriented Python SDK for the Pexels API.
 

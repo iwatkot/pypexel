@@ -33,3 +33,6 @@ jobs:
 
       - name: Run pylint
         run: pylint pypexel
+
+      - name: Run pytest with coverage
+        run: pytest --cov=pypexel --cov-branch --cov-report xml

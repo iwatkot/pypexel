@@ -18,6 +18,7 @@ Async Object-oriented Python SDK for the Pexels API.
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)<br>
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/pypexel)](https://pypi.org/project/pypexel/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pypexel)](https://pypi.org/project/pypexel/)
+[![codecov](https://codecov.io/github/iwatkot/pypexel/graph/badge.svg?token=M9EYR3D23P)](https://codecov.io/github/iwatkot/pypexel)
 
 </div>
 
